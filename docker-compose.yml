@@ -13,3 +13,17 @@ services:
       - 35729:35729
     volumes:
       - .:/srv/jekyll
+
+  hfla_test:
+    build: ./docker/test
+    image: hfla_test_image
+    container_name: hfla_test
+    profiles:
+      - test
+    working_dir: /workspace
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - GITHUB_TEST_REPO_OWNER=${GITHUB_TEST_REPO_OWNER}
+      - GITHUB_TEST_REPO_NAME=${GITHUB_TEST_REPO_NAME}
+    volumes:
+      - .:/workspace
