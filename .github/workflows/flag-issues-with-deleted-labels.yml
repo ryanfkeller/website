@@ -1,0 +1,25 @@
+# This workflow checks if a deleted label was used by any issues
+#  and if so, flags the issues that were affected by the deletion
+
+name: Flag Issues With Deleted Labels
+
+on: 
+  workflow_call:
+
+jobs:
+  Get-Recently-Unlabeled-Issues:
+    runs-on: ubuntu-latest
+    outputs:
+      unlabeled-issues: ${{ steps.get-recently-unlabeled-issues.outputs.result }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Get recently unlabeled issues
+        id: get-recently-unlabeled-issues
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.HACKFORLA_GRAPHQL_TOKEN }}
+          script: |
+            const script = require('.github-actions/utils/get-recently-unlabeled-issues.js')
+            const issueList = script({g: github, c: context})
+            return issueList
+
