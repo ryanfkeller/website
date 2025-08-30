@@ -7,7 +7,7 @@ jobs:
   # Adds missing labels to newly-created or transferred issues
   Add-Missing-Labels-To-Issues:
     runs-on: ubuntu-latest
-    if: ${{ github.event.action == 'opened' || github.event.action == 'transferred' }}
+    if: ${{ github.repository == 'hackforla/website' && (github.event.action == 'opened' || github.event.action == 'transferred') }}
     steps:
     - uses: actions/checkout@v4   
     # Checks if user is on the 'website-write' team, else halts workflow

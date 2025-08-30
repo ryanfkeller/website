@@ -5,6 +5,11 @@ name: Flag Issues With Deleted Labels
 
 on: 
   workflow_call:
+    secrets: 
+      HACKFORLA_GRAPHQL_TOKEN:
+        required: true
+      HACKFORLA_BOT_PA_TOKEN:
+        required: true
 
 jobs:
   Get-Recently-Unlabeled-Issues:
@@ -19,7 +24,28 @@ jobs:
         with:
           github-token: ${{ secrets.HACKFORLA_GRAPHQL_TOKEN }}
           script: |
-            const script = require('.github-actions/utils/get-recently-unlabeled-issues.js')
+            const script = require('./github-actions/utils/get-recently-unlabeled-issues.js')
             const issueList = script({g: github, c: context})
             return issueList
 
+  Create-Unlabel-Notification-Issue:
+    runs-on: ubuntu-latest
+    needs: Get-Recently-Unlabeled-Issues
+    if: ${{ needs.Get-Recently-Unlabeled-Issues.outputs.unlabeled-issues != '[] '}}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create unlabel notification issue
+        id: create-unlabel-notification-issue
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.HACKFORLA_BOT_PA_TOKEN }}
+          script: |
+            const script = require('./github-actions/utils/create-unlabel-notification-issue.js')
+            const unlabeledIssues = ${{ needs.Get-Recently-Unlabeled-Issues.outputs.unlabeled-issues }}
+            return script({
+              g: github,
+              c: context,
+              unlabeledIssues: unlabeledIssues
+            })
+
+            

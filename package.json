@@ -1,0 +1,10 @@
+{
+    "name": "hfla",
+    "scripts": {
+        "test": "jest",
+        "test:gha": "jest --selectProjects gha-tests"
+    },
+    "devDependencies": {
+        "jest": "^29.0.0"
+    }
+}

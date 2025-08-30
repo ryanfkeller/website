@@ -4,7 +4,7 @@
  * @param {Object} context          - context opbject from actions/github-script
  * @returns {Array} recentUnlabels  - issues that were recently unlabeled
  */
-async function getRecentlyUnlabeledIssues(github, context) {
+async function getRecentlyUnlabeledIssues({g: github, c: context}) {
 
     // Get the name of the label that was just deleted
     const deletedLabelName = context.payload.label.name;
@@ -13,6 +13,17 @@ async function getRecentlyUnlabeledIssues(github, context) {
     let fiveMinutesAgo = new Date();
     fiveMinutesAgo.setMinutes(fiveMinutesAgo.getMinutes() - 5);
 
+    // Set query variables
+    const variables = {
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      since: fiveMinutesAgo.toISOString()
+    };
+
+    // Define GraphQL query. This query returns all issues that were updated within 
+    // the last 5 minutes, and the last 10 unlabeling events for those issues, but does 
+    // NOT ensure that the unlabeling events were within last 5 minutes or that the 
+    // unlabeling was with the most recently deleted label, so post-processing is required
     const query = `query ($owner: String!, $repo: String!, $since: DateTime!) {
       repository(owner: $owner, name: $repo) {
         issues(first: 100, orderBy: {field: UPDATED_AT, direction: DESC}, filterBy: { since: $since }) {
@@ -33,17 +44,8 @@ async function getRecentlyUnlabeledIssues(github, context) {
       }
     }`;
 
-    const variables = {
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      since: fiveMinutesAgo.toISOString()
-    };
-
     try {
-        // This query returns all issues that were updated within the last 5 minutes
-        // and the last 10 unlabeling events for that issue,
-        // but does NOT ensure that the unlabeling events were within last 5 minutes
-        // or that the unlabeling was with the most recently deleted label
+        // Execute query
         const result = await github.graphql(query, variables);
 
         // Process query results to find issues where the unlabeling events were
@@ -55,14 +57,17 @@ async function getRecentlyUnlabeledIssues(github, context) {
                 // Each unlabeled event of the issue
                 const eventTime = new Date(event.createdAt);
                 if (eventTime >= fiveMinutesAgo && event.label.name === deletedLabelName) {
-                    recentUnlabels.push({
-                        issueNumber: issue.number,
-                        labelName: event.label.name,
-                        unlabeledAt: event.createdAt
-                    });
+                  // Unlabel event was with the target label and within the last 5 minutes
+                  recentUnlabels.push({
+                      issueNumber: issue.number,
+                      unlabeledAt: event.createdAt
+                  });
                 }
             }
         }
+
+        console.log(`Found ${recentUnlabels.length} recently unlabeled issues with label "${deletedLabelName}"`);
+        console.log('Results:', JSON.stringify(recentUnlabels, null, 2));
 
         return recentUnlabels;
     } catch (error) {
