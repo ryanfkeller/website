@@ -3,21 +3,18 @@ const config = {
 
   verbose: true,
   testEnvironment: 'node',
+  transform: {},
+  testTimeout: 60000, //ms
 
   projects: [
     {
       displayName: 'gha-tests',
       
       testMatch : [
-        '**/tests/gha-tests/**/*.test.js'
+        '**/tests/gha-tests/**/*.test.mjs'
       ],
-
-      // Timeout in ms
-      testTimeout: 30000,
-
-      setupFilesAfterEnv: ['<rootDir>/tests/gha-tests/utils/test-setup.js']
     }
   ]
 }
 
-module.exports = config;
+export default config;

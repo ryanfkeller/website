@@ -9,8 +9,8 @@ on:
 
 jobs:
   # Check if the deleted label was in use. If so, flag the deletion and affected issues
-  Check-For-Issues-Unlabeled-After-Deletion:
-    uses: ./.github/workflows/flag-issues-with-deleted-labels.yml
+  Flag-Issues-Unlabeled-After-Deletion:
+    uses: ./.github/workflows/flag-issues-unlabeled-after-deletion.yml
     if: ${{ github.repository == 'ryanfkeller/website' && github.event.action == 'deleted' }}
     secrets: 
       HACKFORLA_GRAPHQL_TOKEN: ${{ secrets.HACKFORLA_GRAPHQL_TOKEN }}
