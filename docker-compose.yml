@@ -14,12 +14,14 @@ services:
     volumes:
       - .:/srv/jekyll
 
-  hfla_test:
-    build: ./docker/test
-    image: hfla_test_image
-    container_name: hfla_test
+  hfla_testing:
+    build:
+      context: .
+      dockerfile: docker/testing/Dockerfile
+    image: hfla_testing_image
+    container_name: hfla_testing
     profiles:
-      - test
+      - testing
     working_dir: /workspace
     environment:
       - GITHUB_TOKEN=${GITHUB_TOKEN}

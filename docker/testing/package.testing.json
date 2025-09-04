@@ -1,0 +1,12 @@
+{
+    "name": "hfla",
+    "scripts": {
+        "test": "node --experimental-vm-modules node_modules/.bin/jest --detectOpenHandles --verbose",
+        "test:gha": "node --experimental-vm-modules node_modules/.bin/jest --detectOpenHandles --verbose --selectProjects gha-tests"
+    },
+    "devDependencies": {
+        "jest": "^29.0.0",
+        "@octokit/rest": "^22.0.0",
+        "prettier": "^3.6.2"
+    }
+}

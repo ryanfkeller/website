@@ -7,5 +7,7 @@ WORKDIR /workspace
 # Initialize package.json and install project dependencies
 RUN npm install --save-dev jest @octokit/rest prettier
 
+ENTRYPOINT ["docker/testing/entrypoint.sh"]
+
 # Default command (keep the container alive for exec)
 CMD ["sleep", "infinity"]

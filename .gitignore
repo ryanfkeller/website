@@ -29,3 +29,7 @@ models.json
 
 # Ignore .env file
 .env
+
+# For now, ignore package.json and jest.config.js moved during image run
+jest.config.js
+package.json
