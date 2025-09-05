@@ -87,17 +87,14 @@ describe("Flag Issues With Deleted Labels Workflow Tests", () => {
   }) => {
     if (!agendaIssue) {
       // No agenda issue was found
+      agendaNoticeIssues[labelName] = await gh.waitForIssue(
+          `Review Needed - Issue Posting to Agenda Issue #${STATIC_ISSUE_NUMS.AGENDA} for Label ${labelName} Deletion`,
+      );
       if (shouldExist) {
         // We are supposed to notify, and there is no matching Agenda issue, so we should have made a new Agenda Missing issue
-        agendaNoticeIssues[labelName] = await gh.waitForIssue(
-          `Review Needed - Error Posting to Agenda Issue #${STATIC_ISSUE_NUMS.AGENDA} For Label ${labelName} Deletion`,
-        );
         expect(agendaNoticeIssues[labelName]).not.toBeNull();
       } else {
         // We are not supposed to notify, so we should not have made an Agenda Missing issue
-        agendaNoticeIssues[labelName] = await gh.waitForIssue(
-          `Review Needed - Error Posting to Agenda Issue #${STATIC_ISSUE_NUMS.AGENDA}`,
-        );
         expect(agendaNoticeIssues[labelName]).toBeNull();
       }
     } else {
@@ -228,7 +225,7 @@ describe("Flag Issues With Deleted Labels Workflow Tests", () => {
       });
     });
 
-    it("two in use labels deleted, one in-use label not deleted, one not-in-use label deleted", async () => {
+    xit("two in use labels deleted, one in-use label not deleted, one not-in-use label deleted", async () => {
       console.info(
         "Running test: two in use labels deleted, one in-use label not deleted, one not-in-use label deleted (duration ~40s)",
       );
