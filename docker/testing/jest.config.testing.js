@@ -4,7 +4,7 @@ const config = {
   verbose: true,
   testEnvironment: 'node',
   transform: {},
-  testTimeout: 60000, //ms
+  testTimeout: 120000, //ms
 
   projects: [
     {

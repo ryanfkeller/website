@@ -90,7 +90,7 @@ describe("Flag Issues With Deleted Labels Workflow Tests", () => {
       if (shouldExist) {
         // We are supposed to notify, and there is no matching Agenda issue, so we should have made a new Agenda Missing issue
         agendaNoticeIssues[labelName] = await gh.waitForIssue(
-          `Review Needed - Error Posting to Agenda Issue #${STATIC_ISSUE_NUMS.AGENDA}`,
+          `Review Needed - Error Posting to Agenda Issue #${STATIC_ISSUE_NUMS.AGENDA} For Label ${labelName} Deletion`,
         );
         expect(agendaNoticeIssues[labelName]).not.toBeNull();
       } else {
