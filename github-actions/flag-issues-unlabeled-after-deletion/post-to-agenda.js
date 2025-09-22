@@ -50,6 +50,8 @@ async function postUnlabelNotificationToAgenda({
       repo: context.repo.repo,
       issue_number: STATIC_ISSUE_NUMS.AGENDA});
 
+    console.log(statusIssue);
+
     // If not open, throw error to create a status closed notification issue
     if (statusIssue["data"]["state"] !== "open") {
       throw new Error("Status issue has state:" + statusIssue["data"]["state"]);

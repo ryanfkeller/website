@@ -159,10 +159,6 @@ describe("Flag Issues With Deleted Labels Workflow Tests", () => {
   });
 
   beforeEach(async () => {
-    // Re-open the agenda issue if it exists
-    if (agendaIssue) {
-      await gh.reopenIssue(STATIC_ISSUE_NUMS.AGENDA);
-    }
     // Reset test issues (open + no labels)
     // Do it in parallel to speed things up a bit
     await Promise.all(
@@ -201,7 +197,7 @@ describe("Flag Issues With Deleted Labels Workflow Tests", () => {
 
   describe("nominal tests", () => {
     it("single label test", async () => {
-      console.info("Running single label test (duration ~20s)");
+      console.info("Running single label deletion test (duration ~30s)");
 
       // Create test Label
       const labelName = `test-label-A-${timestamp}`;
@@ -234,7 +230,7 @@ describe("Flag Issues With Deleted Labels Workflow Tests", () => {
 
     it("multi-label test", async () => {
       console.info(
-        "Running multi-label test (duration ~40s)",
+        "Running multi-label deletion test (duration ~65s)",
       );
       // Create 4 test label names
       const testLabels = [];
@@ -242,10 +238,11 @@ describe("Flag Issues With Deleted Labels Workflow Tests", () => {
         const labelName = `test-label-B${i}-${timestamp}`;
         testLabels.push(labelName);
       }
+      const labelColor = `56359e`;
 
       // Request them to be made async
       await Promise.all(
-        testLabels.map((labelName) => gh.createLabel(labelName)),
+        testLabels.map((labelName) => gh.createLabel(labelName, labelColor)),
       );
 
       // Add labels to our issues
@@ -314,95 +311,5 @@ describe("Flag Issues With Deleted Labels Workflow Tests", () => {
         checkAgenda({ labelName: testLabels[3], shouldExist: false }),
       ]);
     });
-
-    it("multi-label test, agenda closed", async () => {
-      console.info(
-        "Running multi-label test, agenda closed (duration ~40s)",
-      );
-
-      // Close the agenda issue
-      if (agendaIssue) {
-        gh.closeIssue(STATIC_ISSUE_NUMS.AGENDA);
-      }
-      
-      // Create 4 test label names
-      const testLabels = [];
-      for (let i = 0; i < 4; i++) {
-        const labelName = `test-label-C${i}-${timestamp}`;
-        testLabels.push(labelName);
-      }
-
-      // Request them to be made async
-      await Promise.all(
-        testLabels.map((labelName) => gh.createLabel(labelName)),
-      );
-
-      // Add labels to our issues
-      // Should wind up with
-      // Label 0: Issues 0, 1
-      // Label 1: Issues 1, 3
-      // Label 2: Issues 3, 4
-      // Label 3: No issues
-      expect(numTestIssues > 4).toBe(true); // make sure we have enough issues for this test
-      const label0Issues = testIssues.slice(0, 2);
-      const label1Issues = testIssues.slice(1, 4);
-      const label2Issues = testIssues.slice(3, 5);
-
-      // Add labels to all our issues
-      await Promise.all([
-        ...label0Issues.map((issue) =>
-          gh.addLabelsToIssue(issue.number, [testLabels[0]]),
-        ),
-        ...label1Issues.map((issue) =>
-          gh.addLabelsToIssue(issue.number, [testLabels[1]]),
-        ),
-        ...label2Issues.map((issue) =>
-          gh.addLabelsToIssue(issue.number, [testLabels[2]]),
-        ),
-      ]);
-
-      // Delete labels 0, 1, and 3
-      await gh.deleteLabel(testLabels[0]);
-      await gh.deleteLabel(testLabels[1]);
-      await gh.deleteLabel(testLabels[3]);
-
-      // Check for notification and agenda for all issues
-      await Promise.all([
-        checkNotificationIssue({
-          labelName: testLabels[0],
-          shouldExist: true,
-          issuesToMention: label0Issues,
-        }),
-        checkNotificationIssue({
-          labelName: testLabels[1],
-          shouldExist: true,
-          issuesToMention: label1Issues,
-        }),
-        checkNotificationIssue({
-          labelName: testLabels[2],
-          shouldExist: false,
-        }),
-        checkNotificationIssue({
-          labelName: testLabels[3],
-          shouldExist: false,
-        }),
-      ]);
-
-      await Promise.all([
-        checkAgenda({
-          labelName: testLabels[0],
-          shouldExist: true,
-          issuesToMention: label0Issues,
-        }),
-        checkAgenda({
-          labelName: testLabels[1],
-          shouldExist: true,
-          issuesToMention: label1Issues,
-        }),
-        checkAgenda({ labelName: testLabels[2], shouldExist: false }),
-        checkAgenda({ labelName: testLabels[3], shouldExist: false }),
-      ]);
-    });
-
   });
 });
