@@ -143,7 +143,6 @@ class GitHubHelper {
   async waitForIssue(
     title,
     timeoutMs = 30000,
-    fields = ["number", "title", "state", "labels", "body"],
   ) {
     const start = Date.now();
     const pollDelay = 1000; //ms
