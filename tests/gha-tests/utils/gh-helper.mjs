@@ -191,14 +191,27 @@ class GitHubHelper {
   /* Cleanup                                                                    */
   /* -------------------------------------------------------------------------- */
 
-  async cleanup() {
+  async label_cleanup() {
+    await Promise.allSettled([
+      // Delete created labels
+      ...this.createdLabels.map((labelName) => this.deleteLabel(labelName)),
+    ]);
+  }
+
+  async issue_cleanup() {
     await Promise.allSettled([
       // Close and clean up created issues
       ...this.createdIssues.map((issueNumber) =>
         this.closeIssue(issueNumber, "Test cleanup"),
-      ),
-      // Delete created labels
-      ...this.createdLabels.map((labelName) => this.deleteLabel(labelName)),
+      )
+    ]);
+
+  }
+
+  async cleanup() {
+    await Promise.all([
+      this.issue_cleanup(),
+      this.label_cleanup(),
     ]);
   }
 }

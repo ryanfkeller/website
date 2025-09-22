@@ -171,6 +171,9 @@ describe("Flag Issues With Deleted Labels Workflow Tests", () => {
         await gh.removeAllLabelsFromIssue(testIssue.number);
       }),
     );
+
+    // Make sure all prior test labels are deleted before start
+    await gh.label_cleanup();
   });
 
   afterAll(async () => {
