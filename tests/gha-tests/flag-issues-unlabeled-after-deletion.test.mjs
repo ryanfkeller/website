@@ -62,9 +62,22 @@ describe("Flag Issues With Deleted Labels Workflow Tests", () => {
     );
     if (shouldExist) {
       expect(notificationIssues[labelName]).not.toBeNull();
-      expect(notificationIssues[labelName].labels.map((l) => l.name)).toContain(
-        "ready for product",
-      );
+      // Check labels
+      const expectedIssueLabels = [
+        "Complexity: Small",
+        "size: 0.5pt",
+        "Feature: Administrative",
+        "role: back end/devOps",
+        "ready for product"
+      ];
+
+      for (const expectedIssueLabel of expectedIssueLabels) {
+        expect(
+          notificationIssues[labelName].labels.map((l) => l.name)).toContain(
+            expectedIssueLabel
+        );
+      }
+      
       checkIssueMentions(notificationIssues[labelName].body, issuesToMention);
     } else {
       expect(notificationIssues[labelName]).toBeNull();
@@ -88,11 +101,27 @@ describe("Flag Issues With Deleted Labels Workflow Tests", () => {
     if (!agendaIssue || agendaIssue["state"] != "open") {
       // Agenda issue was not found or is closed
       agendaNoticeIssues[labelName] = await gh.waitForIssue(
-          `Review Needed - Error Posting to Agenda Issue #${STATIC_ISSUE_NUMS.AGENDA} for Label ${labelName} Deletion`,
+          `Review Needed - Error Posting to Agenda Issue #${STATIC_ISSUE_NUMS.AGENDA} for Label \`${labelName}\` Deletion`,
       );
       if (shouldExist) {
         // We are supposed to notify, and there is no matching Agenda issue, so we should have made a new Agenda Missing issue
         expect(agendaNoticeIssues[labelName]).not.toBeNull();
+
+        // Check the labels of the created Agenda Issue
+        const expectedIssueLabels = [
+          "Complexity: Small",
+          "size: 0.5pt",
+          "Feature: Administrative",
+          "role: back end/devOps",
+          "ready for product"
+        ];
+  
+        for (const expectedIssueLabel of expectedIssueLabels) {
+          expect(
+            agendaNoticeIssues[labelName].labels.map((l) => l.name)).toContain(
+              expectedIssueLabel
+          );
+        }
       } else {
         // We are not supposed to notify, so we should not have made an Agenda Missing issue
         expect(agendaNoticeIssues[labelName]).toBeNull();
