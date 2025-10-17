@@ -13,3 +13,14 @@ services:
       - 35729:35729
     volumes:
       - .:/srv/jekyll
+  hfla_test:
+    image: node:20-alpine
+    container_name: hfla_test
+    volumes:
+      - .:/website
+    working_dir: /website/tests
+    command: >
+      sh -c "npm install jest jest-environment-jsdom liquidjs gray-matter --save-dev &&
+             sleep infinity"
+
+    
