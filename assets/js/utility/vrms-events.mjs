@@ -55,7 +55,9 @@ export const vrmsDataFetch = (currentPage, appendMeetingTimes) => {
      });
 
     if (currentPage === "events") return scheduleData
-    else if (currentPage === "project") appendMeetingTimes(scheduleData)
+    else if (currentPage === "project") {
+      appendMeetingTimes(scheduleData)
+    }
 }
 
 /**
