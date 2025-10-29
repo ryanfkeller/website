@@ -5,16 +5,22 @@ module.exports = {
         'tests/',
         'assets/js' 
     ],
+    setupFilesAfterEnv: ['<rootDir>/tests/jest-coverage-hook.js'],
     transform: {
-        "\\.(js|mjs)$": './tests/frontend/utils/jekyll-js-transformer.js',
+        // "\\.mjs$": './tests/frontend/transformers/jekyll-testjs-transformer.mjs',
         // "\\.html$": './tests/frontend/transformers/jekyllHtmlTransformer.js',
     },
-    testMatch: "**/project.integ.test.mjs",
+    testMatch: "**/vrms-events.unit.testcopy.mjs",
     transformIgnorePatterns: ['tests/'], // only transform non-test files
-    coverageProvider: 'v8',              // default istanbul has trouble with DOM conditionals
-    collectCoverageFrom: [
-        'assets/js/**/*.(js|mjs)' // eventually we will want coverage from this whole folder
-        // 'assets/js/hamburger-nav.js',
-    ],
+    // collectCoverageFrom: [
+    //     'assets/js/utility/vrms-events.mjs',
+    //     // 'utility/vrms-events.mjs',
+    //     // 'assets/js/**/*.(js|mjs)' // eventually we will want coverage from this whole folder
+    //     // 'assets/js/hamburger-nav.js',
+    // ],
     maxWorkers: 1,
+    coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '/coverage/',
+    '/tests/',]
 };

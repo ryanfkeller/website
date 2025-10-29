@@ -1,8 +1,14 @@
-import { jest } from '@jest/globals';
 import path from 'path';
+import { jest } from '@jest/globals';
+import { fileURLToPath } from 'url';
+
+import {jekyllImport} from '../utils/jekyll-import.mjs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
-const sampleData = [
+const testVrmsData = [
     { name: 'Regular Meeting', date: '2025-10-21', startTime: '2025-10-21T18:00:00Z', endTime: '2025-10-21T19:00:00Z', project: { name: 'Project A' } },
     { name: 'Another Meeting', date: '2025-10-20', startTime: '2025-10-20T17:00:00Z', endTime: '2025-10-20T18:00:00Z', project: { name: 'Project B' } },
     { name: 'Test Event', date: '2025-10-22', startTime: '2025-10-22T12:00:00Z', endTime: '2025-10-22T13:00:00Z', project: { name: 'Project C' } },
@@ -10,20 +16,21 @@ const sampleData = [
     { name: 'Early Meeting', date: '2025-10-20', startTime: '2025-10-20T08:00:00Z', endTime: '2025-10-20T09:00:00Z', project: { name: 'Project B' } },
     { name: 'Late Meeting', date: '2025-10-20', startTime: '2025-10-20T23:00:00Z', endTime: '2025-10-20T23:59:00Z', project: { name: 'Project B' } }
 ];
-
-jest.unstable_mockModule('../__mocks__/liquid-data.mjs', () => ({
+const context = ({
+    site: {
         data: {
-            site: {
-                data: {
-                    external: {
-                        vrms_data: sampleData
-                    }
-                }
+            external: {
+                    vrms_data: testVrmsData
             }
         }
-    }));
+    }
+});
 
-let vrmsEvents;
+const vrmsEventsPath = path.resolve(__dirname, '../../../assets/js/utility/vrms-events.mjs');
+
+const vrmsModule = await jekyllImport(vrmsEventsPath, context);
+
+
 
 beforeAll(async () => {
     
@@ -31,17 +38,16 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     jest.resetModules();
-    vrmsEvents = await import('../../../assets/js/utility/vrms-events.mjs');
 });
 
 
-describe('vrmsDataFetch', () => {
+describe('vrmsModule.vrmsDataFetch', () => {
     it('should return sorted non-test events and not call appendMeetingTimes for "events" view', async() => {
         // Create a mock function just to see if it is called
         const mockAppend = jest.fn();
 
-        // Call vrmsDataFetch with events view and mock function
-        const sorted = vrmsEvents.vrmsDataFetch('events', mockAppend);
+        // Call vrmsModule.vrmsDataFetch with events view and mock function
+        const sorted = vrmsModule.vrmsDataFetch('events', mockAppend);
 
         // Mock append should not be called
         expect(mockAppend).not.toHaveBeenCalled();
@@ -63,8 +69,8 @@ describe('vrmsDataFetch', () => {
         // Create a mock function to see if its called and what it was called with
         const mockAppend = jest.fn();
         
-        // Call vrmsDataFetch with events view and mock function
-        const sorted = vrmsEvents.vrmsDataFetch('project', mockAppend);
+        // Call vrmsModule.vrmsDataFetch with events view and mock function
+        const sorted = vrmsModule.vrmsDataFetch('project', mockAppend);
 
         // Mock event should be called
         expect(mockAppend).toHaveBeenCalled();
@@ -74,15 +80,15 @@ describe('vrmsDataFetch', () => {
         expect(Array.isArray(calledWith)).toBe(true);
         expect(calledWith.every(e => /test/i.test(e.name) === false)).toBe(true);
 
-        // The actual return value from vrmsDataFetch should be undefined because nothing is returned
+        // The actual return value from vrmsModule.vrmsDataFetch should be undefined because nothing is returned
         expect(sorted).toBeUndefined();
     });
 });
 
-describe('localTimeIn12Format', () => {
+describe('localeTimeIn12Format', () => {
     it('should return a 12-hour formatted string', () => {
         // Pass in a dummy timestamp checking single digit AM hour format
-        let timeStr = vrmsEvents.localeTimeIn12Format("2020-05-13T02:00:00.000Z");
+        let timeStr = vrmsModule.localeTimeIn12Format("2020-05-13T02:00:00.000Z");
         expect (typeof timeStr).toBe('string');
         // regex to match "1:00 am"/"10:00 pm" format.
         // Maybe overkill and not as specific as later tests...
@@ -90,22 +96,22 @@ describe('localTimeIn12Format', () => {
     })
 
     it ('should handle single digit AM times correctly', () => {
-        const timeStr = vrmsEvents.localeTimeIn12Format("2025-10-20T01:00:00.000Z");
+        const timeStr = vrmsModule.localeTimeIn12Format("2025-10-20T01:00:00.000Z");
         expect(timeStr).toBe('1:00 am');
     })
 
     it ('should handle multi-digit AM times correctly', () => {
-        const timeStr = vrmsEvents.localeTimeIn12Format("2025-10-20T10:15:00.000Z");
+        const timeStr = vrmsModule.localeTimeIn12Format("2025-10-20T10:15:00.000Z");
         expect(timeStr).toBe('10:15 am');
     })
 
     it ('should handle single-digit PM times correctly', () => {
-        const timeStr = vrmsEvents.localeTimeIn12Format("2025-10-20T14:31:00.000Z");
+        const timeStr = vrmsModule.localeTimeIn12Format("2025-10-20T14:31:00.000Z");
         expect(timeStr).toBe('2:31 pm');
     })
 
     it ('should handle multi-digit PM times correctly', () => {
-        const timeStr = vrmsEvents.localeTimeIn12Format("2025-10-20T23:59:00.000Z");
+        const timeStr = vrmsModule.localeTimeIn12Format("2025-10-20T23:59:00.000Z");
         expect(timeStr).toBe('11:59 pm');
     })
 });

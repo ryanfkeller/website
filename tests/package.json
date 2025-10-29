@@ -1,8 +1,7 @@
 {
   "name": "tests",
   "scripts": {
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --color",
-    "test:cov": "NODE_OPTIONS=--experimental-vm-modules jest --verbose --coverage --no-cache --color"
+    "test": "NODE_OPTIONS='--experimental-vm-modules --enable-source-maps' jest --verbose --coverage --color"
   },
   "devDependencies": {
     "gray-matter": "^4.0.3",
@@ -12,6 +11,7 @@
     "js-yaml": "^4.1.0",
     "jsdom": "^27.0.0",
     "liquid": "^5.1.1",
-    "liquidjs": "^10.22.0"
+    "liquidjs": "^10.23.0",
+    "magic-string": "^0.30.21"
   }
 }
