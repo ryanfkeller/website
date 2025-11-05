@@ -5,12 +5,13 @@ module.exports = {
         'tests/',
         'assets/js' 
     ],
-    setupFilesAfterEnv: ['<rootDir>/tests/jest-coverage-hook.js'],
     transform: {
-        // "\\.mjs$": './tests/frontend/transformers/jekyll-testjs-transformer.mjs',
+        "\\.mjs$": './tests/frontend/transformers/jekyll-js-transformer.mjs',
         // "\\.html$": './tests/frontend/transformers/jekyllHtmlTransformer.js',
     },
-    testMatch: "**/vrms-events.unit.testcopy.mjs",
+    testMatch: ["**/vrms-events-utils.unit.test.mjs",
+        "**/vrms-events.intg.test.mjs",
+    ],
     transformIgnorePatterns: ['tests/'], // only transform non-test files
     // collectCoverageFrom: [
     //     'assets/js/utility/vrms-events.mjs',
