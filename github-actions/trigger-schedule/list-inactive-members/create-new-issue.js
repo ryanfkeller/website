@@ -22,7 +22,7 @@ async function main({ g, c }) {
   // Retrieve lists data from json file written in previous step
   const filepath = 'github-actions/utils/_data/inactive-members.json';
   const rawData = fs.readFileSync(filepath, 'utf8');
-  let inactiveLists = JSON.parse(rawData);
+  const inactiveLists = JSON.parse(rawData);
   const inactiveWithOpen = parseInactiveOpen(inactiveLists['inactiveOpenIssue']);
   const nonTeamWithOpen = parseNonTeamOpen(inactiveLists['nonTeamOpenIssue']);
   
@@ -36,34 +36,36 @@ async function main({ g, c }) {
   // Add issue number used to reference the issue and comment on the `Dev/PM Agenda and Notes`
   const commentBody = `**Review Inactive Team Members:** #` + issueNumber + inactiveWithOpen + nonTeamWithOpen;
   await postComment(AGENDA_ISSUE_NUM, commentBody, github, context);
+
+  return issue.html_url;
 }
 
 const createIssue = async (owner, repo, inactiveLists) => {
   // Splits inactiveLists into lists of removed contributors and of those to be notified
-  let removeList = inactiveLists['removedContributors'];
-  let notifyList = inactiveLists['notifiedContributors'];
+  const removeList = inactiveLists['removedContributors'];
+  const notifyList = inactiveLists['notifiedContributors'];
 
-  let removedList = removeList.map(x => "@" + x).join("\n");  
-  let notifiedList = notifyList.map(x => "@" + x).join("\n"); 
+  const removedList = removeList.map(x => "@" + x).join("\n");  
+  const notifiedList = notifyList.map(x => "@" + x).join("\n"); 
 
   // This finds all issues in the repo and returns the only the number for the last issue created. 
   // Add 1 to this issue number to get the number for the next issue- i.e. the one being created.
-  let thisIssuePredict = await github.rest.issues.listForRepo({
+  const thisIssuePredict = await github.rest.issues.listForRepo({
     owner,
     repo,
     state:"all",
     per_page: 1,
     page: 1,
   });
-  let thisIssueNumber = thisIssuePredict['data'][0]['number'] + 1;
+  const thisIssueNumber = thisIssuePredict['data'][0]['number'] + 1;
 
   // Uses issueTemplateParser to pull the relevant data from the issue template
   const pathway = 'github-actions/trigger-schedule/list-inactive-members/inactive-members.md';
   const issueObject = issueTemplateParser(pathway);
 
-  let title = issueObject['title'];
-  let labels = issueObject['labels'];
-  let milestone = parseInt(issueObject['milestone']);
+  const title = issueObject['title'];
+  const labels = issueObject['labels'];
+  const milestone = parseInt(issueObject['milestone']);
   let body = issueObject['body'];
 
   // Replace variables in issue template body

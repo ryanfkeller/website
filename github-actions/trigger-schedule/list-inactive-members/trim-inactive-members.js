@@ -95,7 +95,7 @@ async function removeInactiveMembers(previousContributors, inactiveWithOpenSkill
         removedMembers.push(username);
         // After removal, close member's "Skills Issue", if open
         if (username in inactiveWithOpenSkills) {
-          closePrework(username, inactiveWithOpenSkills[username]);
+          await closePrework(username, inactiveWithOpenSkills[username]);
         }
       }
     }
@@ -215,11 +215,9 @@ function writeData(removedContributors, notifiedContributors, nonTeamOpenIssue, 
   const filepath = 'github-actions/utils/_data/inactive-members.json';
   const inactiveMemberLists = { removedContributors, notifiedContributors, nonTeamOpenIssue, inactiveOpenIssue };
 
-  fs.writeFile(filepath, JSON.stringify(inactiveMemberLists, null, 2), (err) => {
-    if (err) throw err;
-    console.log(`-`.repeat(60));
-    console.log("File `inactive-members.json` saved successfully!");
-   });
+  fs.writeFileSync(filepath, JSON.stringify(inactiveMemberLists, null, 2));
+  console.log(`-`.repeat(60));
+  console.log("File `inactive-members.json` saved successfully!");
 }
 
 module.exports = main;
