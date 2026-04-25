@@ -1,38 +1,44 @@
 {
   "removedContributors": [
-    "shu1513",
-    "KSamra",
-    "santiseccovidal",
-    "Colombianah",
-    "Tanay-14"
-  ],
-  "notifiedContributors": [
     "ijoel",
-    "aadilahmed",
     "nurbu",
     "cadenramey",
-    "ldaws003",
     "dvernon5",
     "AnujaSuryawanshi",
     "kevJ711",
-    "handshek",
-    "sofiatajide",
     "ciddy0",
-    "varyad",
+    "lastCoyotes",
+    "MohamedTwahir",
+    "Nezzer3",
+    "devhaocui",
+    "izzy-me"
+  ],
+  "notifiedContributors": [
+    "ijoel",
+    "aymeviviana",
+    "aadilahmed",
+    "nurbu",
+    "cadenramey",
+    "dvernon5",
+    "AnujaSuryawanshi",
+    "kevJ711",
+    "seb-mejia",
+    "ciddy0",
     "lastCoyotes",
     "michael-4",
     "MohamedTwahir",
     "Nezzer3",
-    "lc1715",
     "devhaocui",
-    "Mykola-Lopushenko",
-    "kimberlyvaldez07",
-    "izzy-me"
+    "Kphalguni",
+    "nathanjkim-codes",
+    "DanielTsang26",
+    "izzy-me",
+    "ibrahimouarrach3-tech"
   ],
-  "nonTeamOpenIssue": {
-    "santiseccovidal": [
-      6426
+  "nonTeamOpenIssue": {},
+  "inactiveOpenIssue": {
+    "aadilahmed": [
+      8353
     ]
-  },
-  "inactiveOpenIssue": {}
+  }
 }
