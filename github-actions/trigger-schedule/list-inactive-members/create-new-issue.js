@@ -7,7 +7,7 @@ const postComment = require('../../utils/post-issue-comment');
 var github;
 var context;
 
-const AGENDA_ISSUE_NUM = 8442;            // Issue number of the Dev/PM meeting agenda on Mondays
+const AGENDA_ISSUE_NUM = 1072;            // Issue number of the Dev/PM meeting agenda on Mondays
 
 /**
  * @description - Function to create a new issue that lists inactive and removed members and posts 
@@ -45,8 +45,8 @@ const createIssue = async (owner, repo, inactiveLists) => {
   const removeList = inactiveLists['removedContributors'];
   const notifyList = inactiveLists['notifiedContributors'];
 
-  const removedList = removeList.map(x => "@" + x).join("\n");  
-  const notifiedList = notifyList.map(x => "@" + x).join("\n"); 
+  let removedList = removeList.map(x => "@ " + x).join("\n");    // important to add space
+  let notifiedList = notifyList.map(x => "@ " + x).join("\n");   // important to add space
 
   // This finds all issues in the repo and returns the only the number for the last issue created. 
   // Add 1 to this issue number to get the number for the next issue- i.e. the one being created.
@@ -65,7 +65,7 @@ const createIssue = async (owner, repo, inactiveLists) => {
 
   const title = issueObject['title'];
   const labels = issueObject['labels'];
-  const milestone = parseInt(issueObject['milestone']);
+  // const milestone = parseInt(issueObject['milestone']);
   let body = issueObject['body'];
 
   // Replace variables in issue template body
@@ -80,7 +80,7 @@ const createIssue = async (owner, repo, inactiveLists) => {
     title,
     body,
     labels,
-    milestone,
+    // milestone,
   });
   console.log('Created issue ' + thisIssueNumber);
   return issue.data;

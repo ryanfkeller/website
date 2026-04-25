@@ -6,8 +6,8 @@
 async function postComment(issueNum, comment, github, context) {
     try {
         await github.rest.issues.createComment({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
+            owner: 'ryanfkeller',
+            repo: 'website',
             issue_number: issueNum,
             body: comment,
         });

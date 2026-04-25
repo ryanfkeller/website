@@ -4,6 +4,7 @@ name: Schedule Monthly
 on:
   schedule:
     - cron:  0 11 1 2-7,9-12 *
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -11,7 +12,7 @@ permissions:
 jobs:
   Trim_Contributors:
     runs-on: ubuntu-latest
-    if: github.repository == 'hackforla/website'
+    if: github.repository == 'ryanfkeller/website'
 
     steps:
     # Checkout repo, and provide authorization token for `stefanzweifel/git-auto-commit-action` below

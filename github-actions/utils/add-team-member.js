@@ -8,14 +8,14 @@
 async function addTeamMember(github, context, team, username){
 
   const baseMember = await github.request('GET /orgs/{org}/teams/{team_slug}/memberships/{username}', {
-      org: context.repo.owner,
+      org: 'hackforla',
       team_slug: team,
       username: username,
     });
     // If response status is not 200, need to add member to baseTeam
     if(baseMember.status != 200){
       await github.request('PUT /orgs/{org}/teams/{team_slug}/memberships/{username}', {
-        org: context.repo.owner,
+        org: 'hackforla',
         team_slug: team,
         username: username,
         role: 'member',

@@ -82,8 +82,8 @@ async function fetchContributors(dates){
       while(true){
         // Fetch 100 items per each page (`pageNum`)
         const contributors = await github.request(api, {
-          owner: context.repo.owner,
-          repo: context.repo.repo,
+          owner: 'hackforla',
+          repo: 'website',
           since: date,
           per_page: 100,
           page: pageNum
