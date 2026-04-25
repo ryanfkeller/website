@@ -11,8 +11,8 @@ async function getTimeline(issueNum, github, context) {
   while (true) {
     try {
       const results = await github.rest.issues.listEventsForTimeline({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
+        owner: 'hackforla',
+        repo: 'website',
         issue_number: issueNum,
         per_page: 100,
         page: page,

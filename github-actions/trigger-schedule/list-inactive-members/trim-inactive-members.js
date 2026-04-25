@@ -86,11 +86,12 @@ async function removeInactiveMembers(previousContributors, inactiveWithOpenSkill
         // Remove member from all teams (except baseTeam)
         for (const team of [writeTeam, mergeTeam]) {
           // https://docs.github.com/en/rest/teams/members?apiVersion=2022-11-28#remove-team-membership-for-a-user
-          await github.request('DELETE /orgs/{org}/teams/{team_slug}/memberships/{username}', {
-            org: context.repo.owner,
-            team_slug: team,
-            username,
-          });
+          console.log('Would be removed: ' + username);
+          // await github.request('DELETE /orgs/{org}/teams/{team_slug}/memberships/{username}', {
+          //   org: context.repo.owner,
+          //   team_slug: team,
+          //   username: username,
+          // });
         }
         removedMembers.push(username);
         // After removal, close member's "Skills Issue", if open
@@ -111,21 +112,21 @@ async function removeInactiveMembers(previousContributors, inactiveWithOpenSkill
  * @param {Number} issueNum      - number of member's "Skills Issue"
  */
 async function closePrework(member, issueNum){ 
-  // https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28#update-an-issue
-  await github.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    issue_number: issueNum,
-    state: 'closed'
-  });
-  console.log(`Closing "Skills Issue" issue number ${issueNum} for ${member}`);
-  // https://docs.github.com/en/rest/issues/comments?apiVersion=2022-11-28#create-an-issue-comment
-  await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    issue_number: issueNum,
-    body: 'The Hack for LA Bot has closed this issue due to member inactivity.'
-  });
+  // Close the assignee's "Pre-work Checklist" and add comment
+  // await github.request('PATCH /repos/{owner}/{repo}/issues/{issue_number}', {
+  //   owner: org,
+  //   repo: repo,
+  //   issue_number: issueNum,
+  //   state: 'closed'
+  // });
+  console.log(`Would be closing "Skills Issue" issue number  ${issueNum} for ${member}`);
+  // // Add comment to issue
+  // await github.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
+  //   owner: org,
+  //   repo: repo,
+  //   issue_number: issueNum,
+  //   body: 'The Hack for LA Bot has closed this issue due to member inactivity.'
+  // });
 }
 
 
