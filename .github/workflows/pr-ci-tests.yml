@@ -10,8 +10,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create _site directory with correct permissions
-        run: mkdir -p _site && chmod 777 _site
+      - name: Set permissions for Jekyll
+        run: chmod -R 777 .
 
       - name: Run E2E tests
         run: docker compose --profile e2e up --exit-code-from hfla_e2e
