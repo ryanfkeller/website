@@ -4,8 +4,8 @@ services:
     container_name: hfla_site
     command: >
       sh -c "jekyll clean &&
-            jekyll serve --force_polling --config _config.yml,_config.docker.yml -I
-            ${NO_LIVERELOAD:---livereload}"
+            jekyll serve --config _config.yml,_config.docker.yml -I
+            ${NO_LIVERELOAD:- --force_polling --livereload}"
     environment:
       - JEKYLL_ENV=docker
     ports:
@@ -26,11 +26,12 @@ services:
       - hfla_site
     command: >
       sh -c "echo 'Waiting for Jekyll...' &&
-             while ! curl -sf http://hfla_site:4000 > /dev/null 2>&1; do
-               sleep 3;
-             done &&
-             echo 'Jekyll ready' &&
-             npm install &&
-             npx playwright test --config=tests/e2e/playwright.config.js"
+            while ! curl -sf http://hfla_site:4000 > /dev/null 2>&1; do
+              sleep 3;
+            done &&
+            echo 'Jekyll ready' &&
+            cd /tmp && npm install @playwright/test@1.59.1 &&
+            cd /website &&
+            /tmp/node_modules/.bin/playwright test --config=tests/e2e/playwright.config.js"
 
       
