@@ -4,7 +4,8 @@ services:
     container_name: hfla_site
     command: >
       sh -c "jekyll clean &&
-            jekyll serve --force_polling --livereload --config _config.yml,_config.docker.yml -I"
+            jekyll serve --force_polling --config _config.yml,_config.docker.yml -I
+            ${NO_LIVERELOAD:---livereload}"
     environment:
       - JEKYLL_ENV=docker
     ports:
