@@ -30,8 +30,7 @@ services:
               sleep 3;
             done &&
             echo 'Jekyll ready' &&
-            cd /tmp && npm install @playwright/test@1.59.1 &&
-            cd /website &&
-            /tmp/node_modules/.bin/playwright test --config=tests/e2e/playwright.config.js"
+            npm install &&
+            npx playwright test --config=tests/e2e/playwright.config.js"
 
       
