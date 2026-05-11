@@ -3,7 +3,8 @@ services:
     image: hackforlaops/ghpages:latest
     container_name: hfla_site
     command: >
-      sh -c "jekyll clean &&
+      sh -c "echo 'NO_WATCH is: '\"$NO_WATCH\" &&
+            jekyll clean &&
             jekyll serve --config _config.yml,_config.docker.yml -I
             ${NO_WATCH:+--no-watch}
             ${NO_WATCH:---force_polling --livereload}"
