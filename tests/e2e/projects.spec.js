@@ -64,3 +64,7 @@ test('clear all filters is not present at desktop', async ({ page }) => {
   
   await expect(page.locator('#clear-all-filters')).toBeHidden()
 })
+
+test('purposefully failing test', async ({ page }) => {
+  expect(false).toBe(true)
+})
