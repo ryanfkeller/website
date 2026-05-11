@@ -15,5 +15,5 @@ jobs:
 
       - name: Run E2E tests
         env:
-            NO_LIVERELOAD: true
+            NO_WATCH: true
         run: docker compose --profile e2e up --exit-code-from hfla_e2e --abort-on-container-exit

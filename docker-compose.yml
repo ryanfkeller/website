@@ -5,7 +5,9 @@ services:
     command: >
       sh -c "jekyll clean &&
             jekyll serve --config _config.yml,_config.docker.yml -I
-            ${NO_LIVERELOAD:- --force_polling --livereload}"
+            ${NO_WATCH:+--no-watch}
+            ${NO_WATCH:---force_polling --livereload}"
+
     environment:
       - JEKYLL_ENV=docker
     ports:
