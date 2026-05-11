@@ -7,9 +7,9 @@ services:
             jekyll serve --config _config.yml,_config.docker.yml -I
             ${NO_WATCH:+--no-watch}
             ${NO_WATCH:---force_polling --livereload}"
-
     environment:
       - JEKYLL_ENV=docker
+      - NO_WATCH
     ports:
       - 4000:4000
       - 35729:35729
