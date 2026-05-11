@@ -17,3 +17,9 @@ jobs:
         env:
             NO_WATCH: true
         run: docker compose --profile e2e up --exit-code-from hfla_e2e --abort-on-container-exit
+
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: tests/e2e/test-results/results.xml
