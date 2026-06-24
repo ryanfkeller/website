@@ -1,0 +1,28 @@
+name: Run Pull Request CI Tests
+on:
+  pull_request:
+    branches:
+      - 'gh-pages'
+jobs:
+  Run-Pull-Request-CI-Tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set permissions for Jekyll
+        run: chmod -R 777 .
+
+      - name: Run E2E tests
+        env:
+            NO_WATCH: true
+        run: docker compose --profile e2e up --exit-code-from hfla_e2e --abort-on-container-exit
+
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Playwright Tests
+          path: tests/e2e/test-results/results.xml
+          reporter: java-junit
+          fail-on-error: false
