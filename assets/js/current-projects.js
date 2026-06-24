@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded",function(){
         }
 
         // create filter dictionary from sorted project data
-        let filters = createFilter(sortedProjectData);
+        let filters = createFilter(sortedProjectData, window.location.pathname === '/projects-check/');
         
         // Insert Checkbox Filter Into The Dom
         for(let [filterName,filterValue] of Object.entries(filters)){
@@ -255,8 +255,8 @@ function projectDataSorter(projectdata){
  * Given an array of project object as returned by ``retrieveProjectDataFromCollection()``
  * Returns a filter object -> {filter_type1:[filter_value1,filter_value2], filter_type2:[filter_value1,filter_value2], ... }
 */
-function createFilter(sortedProjectData){
-    if (window.location.pathname === '/projects-check/') {
+function createFilter(sortedProjectData, checkPage = false) {
+    if (checkPage) {
         return {
             'technologies': [...new Set(sortedProjectData.map(item => (item.project.technologies?.length > 0) ? [item.project.technologies].flat() : '').flat() ) ].filter(v=>v!='').sort(),
             'languages': [...new Set(sortedProjectData.map(item => (item.project.languages?.length > 0) ? [item.project.languages].flat() : '').flat() ) ].filter(v=>v!='').sort(),
@@ -932,4 +932,10 @@ function attachEventListenerCloseModal() {
             modal.style.display = 'none';
         }
     });
+}
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        createFilter, projectDataSorter,
+    };
 }
